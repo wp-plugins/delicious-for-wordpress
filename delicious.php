@@ -31,7 +31,7 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 	} else {
 			if ( empty($bookmarks->items) ) {
 				if ($list) echo '<li>';
-				echo 'No recently listened links.';
+				echo 'No bookmarks avaliable.';
 				if ($list) echo '</li>';
 			} else {
 				foreach ( $bookmarks->items as $bookmark ) {
