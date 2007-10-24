@@ -9,7 +9,7 @@ Author: Ricardo Gonz&aacute;lez
 Author URI: http://rick.jinlabs.com/
 */
 
-/*  Copyright 2007  Ricardo González Castro (rickgc[in]jinlabs.com)
+/*  Copyright 2007  Ricardo González Castro (rick[in]jinlabs.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
