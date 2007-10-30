@@ -3,6 +3,7 @@ Tags: del.icio.us, delicious, bookmarks
 Requires at least: 2.0
 Tested up to: 2.3
 Stable tag: trunk
+Donate link: http://rick.jinlabs.com/donate/
 
 del.icio.us for WordPress displays your latest del.icio.us bookmarks in your WordPress blog.
 
