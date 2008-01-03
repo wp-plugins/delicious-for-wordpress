@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: del.icio.us for Wordpress
-Version: 1.3.2
+Version: 1.4
 Plugin URI: http://rick.jinlabs.com/code/delicious
 Description: Displays your recently listened links. Based on <a href="http://cavemonkey50.com/code/pownce/">Pownce for Wordpress</a> by <a href="http://cavemonkey50.com/">Cavemonkey50</a>. 
 Author: Ricardo Gonz&aacute;lez
@@ -29,15 +29,34 @@ Author URI: http://rick.jinlabs.com/
 
 define('MAGPIE_CACHE_AGE', 120);
 
+$delicious_options['widget_fields']['title'] = array('label'=>'Title:', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['username'] = array('label'=>'Username:', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['num'] = array('label'=>'Number of links:', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['update'] = array('label'=>'Show timestamps:', 'type'=>'checkbox', 'default'=>false);
+$delicious_options['widget_fields']['tags'] = array('label'=>'Show tags:', 'type'=>'checkbox', 'default'=>false);
+$delicious_options['widget_fields']['filtertag'] = array('label'=>'Filter Tag(s):', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['displaydesc'] = array('label'=>'Show descriptions:', 'type'=>'checkbox', 'default'=>false);
+
+
+$delicious_options['prefix'] = 'delicious';
+
+$delicious_options['rss_url'] = 'http://del.icio.us/rss/';
+
+$delicious_options['tag_url'] = 'http://del.icio.us/tag/';
+
+
+
 // Display del.icio.us recently bookmarked links.
 
 function delicious_bookmarks($username = '', $num = 5, $list = true, $update = true, $tags = false, $filtertag = '', $displaydesc = false ) {
+	
+	global $delicious_options;
 	include_once(ABSPATH . WPINC . '/rss.php');
 	
-	$rss = 'http://del.icio.us/rss/'.$username;
+	$rss = $delicious_options['rss_url'].$username;
 	
 	if($filtertag != '') { $rss .= '/'.$filtertag; }
-	
+
 	$bookmarks = fetch_rss($rss);
 
 	if ($list) echo '<ul class="delicious">';
@@ -47,49 +66,50 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 		echo 'Username not configured';
 		if ($list) echo '</li>';
 	} else {
-			if ( empty($bookmarks->items) ) {
-				if ($list) echo '<li>';
-				echo 'No bookmarks avaliable.';
-				if ($list) echo '</li>';
-			} else {
-				foreach ( $bookmarks->items as $bookmark ) {
-					$msg = $bookmark['title'];
-					$updated = delicious_relative($bookmark['dc']['date']);
-					$link = $bookmark['link'];
-					$desc = $bookmark['description'];
-				
-					if ($list) echo '<li class="delicious-item">'; elseif ($num != 1) echo '<p class="delicious">';
-            		echo '<a href="'.$link.'" class="delicious-link">'.$msg.'</a>'; // Puts a link to the link.
-          
-					if ($update) echo ' <span class="delicious-timestamp">' . $updated . '</span>';
-					
-					if ($displaydesc && $desc != '') {
-            echo '<br />';
-            echo '<span class="delicious-desc">'.$desc.'</span>';
-					}
-					
-					if ($tags) {
-						echo '<br />';
-						echo '<div class="delicious-tags">';
-						$tagged = explode(' ', $bookmark['dc']['subject']);
-						foreach ($tagged as $tag) {
-		           	echo '<a href="http://del.icio.us/tag/'.$tag.'" class="delicious-link-tag">'.$tag.'</a> '; // Puts a link to the tag.
-							}
-						echo '</div>';
-						}
-						
-					if ($list) echo '</li>'; elseif ($num != 1) echo '</p>';
-				
-					$i++;
-					if ( $i >= $num ) break;
-				}
-			}
+		if ( empty($bookmarks->items) ) {
+			if ($list) echo '<li>';
+			echo 'No bookmarks avaliable.';
+			if ($list) echo '</li>';
+		} else {
+			foreach ( $bookmarks->items as $bookmark ) {
+				$msg = $bookmark['title'];
+				$updated = delicious_relative($bookmark['dc']['date']);
+				$link = $bookmark['link'];
+				$desc = $bookmark['description'];
 			
-			if ($list) echo '</ul>';
+				if ($list) echo '<li class="delicious-item">'; elseif ($num != 1) echo '<p class="delicious">';
+        		echo '<a href="'.$link.'" class="delicious-link">'.$msg.'</a>'; // Puts a link to the... link.
+      
+				if ($update) echo ' <span class="delicious-timestamp">' . $updated . '</span>';
+				
+				if ($displaydesc && $desc != '') {
+        			echo '<br />';
+        			echo '<span class="delicious-desc">'.$desc.'</span>';
+				}
+				
+				if ($tags) {
+					echo '<br />';
+					echo '<div class="delicious-tags">';
+					$tagged = explode(' ', $bookmark['dc']['subject']);
+					foreach ($tagged as $tag) {
+	           			echo '<a href="http://del.icio.us/tag/'.$tag.'" class="delicious-link-tag">'.$tag.'</a> '; // Puts a link to the tag.
+					}
+					echo '</div>';
+				}
+					
+				if ($list) echo '</li>'; elseif ($num != 1) echo '</p>';
+			
+				$i++;
+				if ( $i >= $num ) break;
+			}
 		}
+		
+		if ($list) echo '</ul>';
 	}
+}
+	
+	
 // Present the date nicer
-
 function delicious_relative($time) {
 	$time = explode('T', substr($time, 0, -1));
 	$date = explode('-', $time[0]);
@@ -141,13 +161,21 @@ function delicious_relative($time) {
     return $relative_date.' ago';
 }
 
+
+
+
+	
+
+
 // delicious widget stuff
 function widget_delicious_init() {
-
+	
 	if ( !function_exists('register_sidebar_widget') )
 		return;
-
-	function widget_delicious($args) {
+	
+	function widget_delicious($args, $number = 1) {
+		
+		global $delicious_options;
 		
 		// $args is an array of strings that help widgets to conform to
 		// the active theme: before_widget, before_title, after_widget,
@@ -157,73 +185,121 @@ function widget_delicious_init() {
 		// Each widget can store its own options. We keep strings here.
 		include_once(ABSPATH . WPINC . '/rss.php');
 		$options = get_option('widget_delicious');
-		$title = $options['title'];
-		$username = $options['username'];
-		$num = $options['num'];
-		$update = ($options['update']) ? true : false;
-		$tags = ($options['tags']) ? true : false;
-		$filtertag = $options['filtertag'];
-		$displaydesc = $options['displaydesc'];
-		$bookmarks = fetch_rss('http://del.icio.us/rss/'.$username);
+		
+		// fill options with default values if value is not set
+		$item = $options[$number];
+		foreach($delicious_options['widget_fields'] as $key => $field) {
+			if (! isset($item[$key])) {
+				$item[$key] = $field['default'];
+			}
+		}
+		$bookmarks = fetch_rss($delicious_options['rss_url'] . $username);
 
-		// These lines generate our output. Widgets can be very complex
-		// but as you can see here, they can also be very, very simple.
-		echo $before_widget . $before_title . $title . $after_title;
-		delicious_bookmarks($username, $num, true, $update, $tags, $filtertag, $displaydesc);
+		// These lines generate our output.
+		echo $before_widget . $before_title . $item['title'] . $after_title;
+		delicious_bookmarks($item['username'], $item['num'], true, $item['update'], $item['tags'], $item['filtertag'], $item['displaydesc']);
 		echo $after_widget;
 	}
 
-	// This is the function that outputs the form to let the users edit
-	// the widget's title. It's an optional feature that users cry for.
-	function widget_delicious_control() {
 
+
+	// This is the function that outputs the form.
+	function widget_delicious_control($number) {
+		
+		global $delicious_options;
+		
 		// Get our options and see if we're handling a form submission.
 		$options = get_option('widget_delicious');
-		if ( !is_array($options) )
-			$options = array('title'=>'', 'username'=>'', 'num'=>'5', 'update'=>true, 'linked'=>true);
-		if ( $_POST['delicious-submit'] ) {
 
-			// Remember to sanitize and format use input appropriately.
-			$options['title'] = strip_tags(stripslashes($_POST['delicious_title']));
-			$options['username'] = strip_tags(stripslashes($_POST['delicious_username']));
-			$options['num'] = strip_tags(stripslashes($_POST['delicious_num']));
-			$options['update'] = isset($_POST['delicious_update']);
-			$options['tags'] = isset($_POST['delicious_tags']);
-			$options['filtertag'] = strip_tags(stripslashes($_POST['delicious_filtertag']));
-			$options['displaydesc'] = isset($_POST['delicious_displaydesc']);
+
+		if ( isset($_POST['delicious-submit']) ) {
+
+			foreach($delicious_options['widget_fields'] as $key => $field) {
+				$options[$number][$key] = $field['default'];
+				$field_name = sprintf('%s_%s_%s', $delicious_options['prefix'], $key, $number);
+
+				if ($field['type'] == 'text') {
+					$options[$number][$key] = strip_tags(stripslashes($_POST[$field_name]));
+				} elseif ($field['type'] == 'checkbox') {
+					$options[$number][$key] = isset($_POST[$field_name]);
+				}
+			}
 
 			update_option('widget_delicious', $options);
 		}
 
-		// Be sure you format your options to be valid HTML attributes.
-		$title = htmlspecialchars($options['title'], ENT_QUOTES);
-		$username = htmlspecialchars($options['username'], ENT_QUOTES);
-		$num = htmlspecialchars($options['num'], ENT_QUOTES);
-		$update_checked = ($options['update']) ? 'checked="checked"' : '';
-		$tags_checked = ($options['tags']) ? 'checked="checked"' : '';
-		$filtertag = htmlspecialchars($options['filtertag'], ENT_QUOTES);
-		$displaydesc_checked = ($options['displaydesc']) ? 'checked="checked"' : '';
-
-		
-		// Here is our little form segment. Notice that we don't need a
-		// complete form. This will be embedded into the existing form.
-		echo '<p style="text-align:right;"><label for="delicious_title">' . __('Title:') . ' <input style="width: 200px;" id="delicious_title" name="delicious_title" type="text" value="'.$title.'" /></label></p>';
-		echo '<p style="text-align:right;"><label for="delicious_username">' . __('Username:') . ' <input style="width: 200px;" id="delicious_username" name="delicious_username" type="text" value="'.$username.'" /></label></p>';
-		echo '<p style="text-align:right;"><label for="delicious_num">' . __('Number of links:') . ' <input style="width: 25px;" id="delicious_num" name="delicious_num" type="text" value="'.$num.'" /></label></p>';
-		echo '<p style="text-align:right;"><label for="delicious_update">' . __('Show timestamps:') . ' <input id="delicious_update" name="delicious_update" type="checkbox"'.$update_checked.' /></label></p>';
-		echo '<p style="text-align:right;"><label for="delicious_tags">' . __('Show tags:') . ' <input id="delicious_tags" name="delicious_tags" type="checkbox"'.$tags_checked.' /></label></p>';
-		echo '<p style="text-align:right;"><label for="delicious_filtertag">' . __('Filter Tag(s):') . ' <input style="width: 300px;" id="delicious_filtertag" name="delicious_filtertag" type="text" value="'.$filtertag.'" /></label></p>';
-		echo '<p style="text-align:right;"><label for="delicious_displaydesc">' . __('Show descriptions:') . ' <input id="delicious_displaydesc" name="delicious_displaydesc" type="checkbox"'.$displaydesc_checked.' /></label></p>';		
+		foreach($delicious_options['widget_fields'] as $key => $field) {
+			
+			$field_name = sprintf('%s_%s_%s', $delicious_options['prefix'], $key, $number);
+			$field_checked = '';
+			if ($field['type'] == 'text') {
+				$field_value = htmlspecialchars($options[$number][$key], ENT_QUOTES);
+			} elseif ($field['type'] == 'checkbox') {
+				$field_value = 1;
+				if (! empty($options[$number][$key])) {
+					$field_checked = 'checked="checked"';
+				}
+			}
+			
+			printf('<p style="text-align:right;" class="delicious_field"><label for="%s">%s <input id="%s" name="%s" type="%s" value="%s" class="%s" %s /></label></p>',
+				$field_name, __($field['label']), $field_name, $field_name, $field['type'], $field_value, $field['type'], $field_checked);
+		}
 		echo '<input type="hidden" id="delicious-submit" name="delicious-submit" value="1" />';
 	}
-	
-	// This registers our widget so it appears with the other available
-	// widgets and can be dragged and dropped into any active sidebars.
-	register_sidebar_widget(array('del.icio.us', 'widgets'), 'widget_delicious');
 
-	// This registers our optional widget control form. Because of this
-	// our widget will have a button that reveals a 300x100 pixel form.
-	register_widget_control(array('del.icio.us', 'widgets'), 'widget_delicious_control', 300, 280);
+
+	function widget_delicious_setup() {
+		$options = $newoptions = get_option('widget_delicious');
+		
+		//echo '<style type="text/css">.delicious_field { text-align:right; } .delicious_field .text { width:200px; }</style>';
+		
+		if ( isset($_POST['delicious-number-submit']) ) {
+			$number = (int) $_POST['delicious-number'];
+			$newoptions['number'] = $number;
+		}
+		
+		if ( $options != $newoptions ) {
+			update_option('widget_delicious', $newoptions);
+			widget_delicious_register();
+		}
+	}
+	
+	
+	function widget_delicious_page() {
+		$options = $newoptions = get_option('widget_delicious');
+	?>
+		<div class="wrap">
+			<form method="POST">
+				<h2><?php _e('del.icio.us Widgets'); ?></h2>
+				<p style="line-height: 30px;"><?php _e('How many del.icio.us widgets would you like?'); ?>
+				<select id="delicious-number" name="delicious-number" value="<?php echo $options['number']; ?>">
+	<?php for ( $i = 1; $i < 10; ++$i ) echo "<option value='$i' ".($options['number']==$i ? "selected='selected'" : '').">$i</option>"; ?>
+				</select>
+				<span class="submit"><input type="submit" name="delicious-number-submit" id="delicious-number-submit" value="<?php echo attribute_escape(__('Save')); ?>" /></span></p>
+			</form>
+		</div>
+	<?php
+	}
+	
+	
+	function widget_delicious_register() {
+		
+		$options = get_option('widget_delicious');
+		$dims = array('width' => 300, 'height' => 300);
+		$class = array('classname' => 'widget_delicious');
+
+		for ($i = 1; $i <= 9; $i++) {
+			$name = sprintf(__('del.icio.us %d'), $i);
+			$id = "delicious-$i"; // Never never never translate an id
+			wp_register_sidebar_widget($id, $name, $i <= $options['number'] ? 'widget_delicious' : /* unregister */ '', $class, $i);
+			wp_register_widget_control($id, $name, $i <= $options['number'] ? 'widget_delicious_control' : /* unregister */ '', $dims, $i);
+		}
+		
+		add_action('sidebar_admin_setup', 'widget_delicious_setup');
+		add_action('sidebar_admin_page', 'widget_delicious_page');
+	}
+
+	widget_delicious_register();
 }
 
 // Run our code later in case this loads prior to any required plugins.

@@ -36,6 +36,10 @@ Drop delicious.php into /wp-content/plugins/ and activate the plug in.
 
 == Version History ==
 
+1.4 - 2008/01/03
+ 
+     * Added multi-widget feature. Thanks to [Michael Feichtinger](http://bohuco.net/blog).
+     
 1.3.2 - 2007/09/26
  
      * Fixed Widget configuration errors. Props to Dave B. 
@@ -64,6 +68,7 @@ Drop delicious.php into /wp-content/plugins/ and activate the plug in.
 **Credits**
 
 Ronald Heft - The plugin is highly based in his Pownce for Wordpress, so the major part of the credits goes to him.
+[Michael Feichtinger](http://bohuco.net/blog) - For the multi-widget feature.
 
 **Contact**
 
