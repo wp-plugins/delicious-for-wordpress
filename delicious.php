@@ -289,7 +289,7 @@ function widget_delicious_init() {
 		$class = array('classname' => 'widget_delicious');
 
 		for ($i = 1; $i <= 9; $i++) {
-			$name = sprintf(__('del.icio.us %d'), $i);
+			$name = sprintf(__('del.icio.us #%d'), $i);
 			$id = "delicious-$i"; // Never never never translate an id
 			wp_register_sidebar_widget($id, $name, $i <= $options['number'] ? 'widget_delicious' : /* unregister */ '', $class, $i);
 			wp_register_widget_control($id, $name, $i <= $options['number'] ? 'widget_delicious_control' : /* unregister */ '', $dims, $i);

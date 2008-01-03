@@ -34,40 +34,9 @@ For more info (options, customization, etc.) visit [the plugin homepage](http://
 
 Drop delicious.php into /wp-content/plugins/ and activate the plug in.
 
-== Version History ==
-
-1.4 - 2008/01/03
- 
-     * Added multi-widget feature. Thanks to [Michael Feichtinger](http://bohuco.net/blog).
-     
-1.3.2 - 2007/09/26
- 
-     * Fixed Widget configuration errors. Props to Dave B. 
-
-1.3.1 - 2007/09/09
-
-    * Fixed more HTML encoding issues. Props to Kyle. 
-
-1.3 - 2007/09/08
-
-    * Added display description option. Suggested by Kyle.
-    * Fixed some HTML encoding issues. Props to Dave. 
-    
-1.2 - 2007/09/05
-
-    * Added tag filter option. Suggested by Geoffrey Harder
-
-1.1 - 2007/08/28
-
-    * Added display tag support
-
-1.0 - 2007/08/22
-
-    * Initial Release
-
 **Credits**
 
-Ronald Heft - The plugin is highly based in his Pownce for Wordpress, so the major part of the credits goes to him.
+[Ronald Heft](http://cavemonkey50.com/) - The plugin is highly based in his Pownce for Wordpress, so the major part of the credits goes to him.
 [Michael Feichtinger](http://bohuco.net/blog) - For the multi-widget feature.
 
 **Contact**
