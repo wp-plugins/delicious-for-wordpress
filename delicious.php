@@ -34,9 +34,9 @@ $delicious_options['widget_fields']['username'] = array('label'=>'Username:', 't
 $delicious_options['widget_fields']['num'] = array('label'=>'Number of links:', 'type'=>'text', 'default'=>'');
 $delicious_options['widget_fields']['update'] = array('label'=>'Show timestamps:', 'type'=>'checkbox', 'default'=>false);
 $delicious_options['widget_fields']['tags'] = array('label'=>'Show tags:', 'type'=>'checkbox', 'default'=>false);
-$delicious_options['widget_fields']['filtertag'] = array('label'=>'Filter Tag(s):', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['filtertag'] = array('label'=>'Filter Tag(s) [cats+dogs+birds]: ', 'type'=>'text', 'default'=>'');
 $delicious_options['widget_fields']['displaydesc'] = array('label'=>'Show descriptions:', 'type'=>'checkbox', 'default'=>false);
-$delicious_options['widget_fields']['nodisplaytag'] = array('label'=>'No display tag:', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['nodisplaytag'] = array('label'=>'No display tag(s) [cats+dogs+birds]:', 'type'=>'text', 'default'=>'');
 
 $delicious_options['prefix'] = 'delicious';
 
