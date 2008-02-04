@@ -1,7 +1,7 @@
 === del.icio.us for Wordpress ===
 Tags: del.icio.us, delicious, bookmarks
 Requires at least: 2.0
-Tested up to: 2.3
+Tested up to: 2.3.2
 Stable tag: trunk
 Donate link: http://rick.jinlabs.com/donate/
 
