@@ -90,8 +90,8 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 				if ($tags) {
 					echo '<br />';
 					echo '<div class="delicious-tags">';
-					$tagged = explode(' ', $bookmark['dc']['subject']);
-					$ndtags = explode(" ", $nodisplaytag);
+					$tagged = explode('+', $bookmark['dc']['subject']);
+					$ndtags = explode('+', $nodisplaytag);
 					foreach ($tagged as $tag) {
 					  if (!in_array($tag,$ndtags)) {
        			  echo '<a href="http://del.icio.us/tag/'.$tag.'" class="delicious-link-tag">'.$tag.'</a> '; // Puts a link to the tag.              
