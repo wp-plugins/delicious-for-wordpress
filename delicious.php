@@ -90,7 +90,7 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 				if ($tags) {
 					echo '<br />';
 					echo '<div class="delicious-tags">';
-					$tagged = explode('+', $bookmark['dc']['subject']);
+					$tagged = explode(' ', $bookmark['dc']['subject']);
 					$ndtags = explode('+', $nodisplaytag);
 					foreach ($tagged as $tag) {
 					  if (!in_array($tag,$ndtags)) {
