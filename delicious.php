@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: del.icio.us for Wordpress
-Version: 1.5
+Version: 1.6
 Plugin URI: http://rick.jinlabs.com/code/delicious
 Description: Displays your recently listened links. Based on <a href="http://cavemonkey50.com/code/pownce/">Pownce for Wordpress</a> by <a href="http://cavemonkey50.com/">Cavemonkey50</a>. 
 Author: Ricardo Gonz&aacute;lez
@@ -37,6 +37,7 @@ $delicious_options['widget_fields']['tags'] = array('label'=>'Show tags:', 'type
 $delicious_options['widget_fields']['filtertag'] = array('label'=>'Filter Tag(s) [cats+dogs+birds]: ', 'type'=>'text', 'default'=>'');
 $delicious_options['widget_fields']['displaydesc'] = array('label'=>'Show descriptions:', 'type'=>'checkbox', 'default'=>false);
 $delicious_options['widget_fields']['nodisplaytag'] = array('label'=>'No display tag(s) [cats+dogs+birds]:', 'type'=>'text', 'default'=>'');
+$delicious_options['widget_fields']['globaltag'] = array('label'=>'Global tags:', 'type'=>'checkbox', 'default'=>false);
 
 $delicious_options['prefix'] = 'delicious';
 
@@ -48,7 +49,7 @@ $delicious_options['tag_url'] = 'http://del.icio.us/tag/';
 
 // Display del.icio.us recently bookmarked links.
 
-function delicious_bookmarks($username = '', $num = 5, $list = true, $update = true, $tags = false, $filtertag = '', $displaydesc = false, $nodisplaytag = '' ) {
+function delicious_bookmarks($username = '', $num = 5, $list = true, $update = true, $tags = false, $filtertag = '', $displaydesc = false, $nodisplaytag = '', $globaltag = false ) {
 	
 	global $delicious_options;
 	include_once(ABSPATH . WPINC . '/rss.php');
@@ -92,9 +93,10 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 					echo '<div class="delicious-tags">';
 					$tagged = explode(' ', $bookmark['dc']['subject']);
 					$ndtags = explode('+', $nodisplaytag);
+					if ($globaltag) { $gttemp = 'tag'; } else { $gttemp = $username; }
 					foreach ($tagged as $tag) {
 					  if (!in_array($tag,$ndtags)) {
-       			  echo '<a href="http://del.icio.us/tag/'.$tag.'" class="delicious-link-tag">'.$tag.'</a> '; // Puts a link to the tag.              
+       			  echo '<a href="http://del.icio.us/'.$gttemp.'/'.$tag.'" class="delicious-link-tag">'.$tag.'</a> '; // Puts a link to the tag.              
             }
 					}
 					echo '</div>';
@@ -200,7 +202,7 @@ function widget_delicious_init() {
 
 		// These lines generate our output.
 		echo $before_widget . $before_title . $item['title'] . $after_title;
-		delicious_bookmarks($item['username'], $item['num'], true, $item['update'], $item['tags'], $item['filtertag'], $item['displaydesc'], $item['nodisplaytag']);
+		delicious_bookmarks($item['username'], $item['num'], true, $item['update'], $item['tags'], $item['filtertag'], $item['displaydesc'], $item['nodisplaytag'], $item['globaltag']);
 		echo $after_widget;
 	}
 
