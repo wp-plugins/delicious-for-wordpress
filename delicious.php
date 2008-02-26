@@ -107,10 +107,9 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 				$i++;
 				if ( $i >= $num ) break;
 			}
-		}
-		
-		if ($list) echo '</ul>';
-	}
+		}	
+  }
+	if ($list) echo '</ul>';  
 }
 	
 	
