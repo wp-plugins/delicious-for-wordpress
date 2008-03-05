@@ -177,6 +177,12 @@ function widget_delicious_init() {
 	if ( !function_exists('register_sidebar_widget') )
 		return;
 	
+	$check_options = get_option('widget_delicious');
+  if ($check_options['number']=='') {
+    $check_options['number'] = 1;
+    update_option('widget_delicious', $check_options);
+  }
+  	
 	function widget_delicious($args, $number = 1) {
 		
 		global $delicious_options;
