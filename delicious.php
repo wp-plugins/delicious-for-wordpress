@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: del.icio.us for Wordpress
-Version: 1.6
+Version: 1.7
 Plugin URI: http://rick.jinlabs.com/code/delicious
 Description: Displays your recently listened links. Based on <a href="http://cavemonkey50.com/code/pownce/">Pownce for Wordpress</a> by <a href="http://cavemonkey50.com/">Cavemonkey50</a>. 
 Author: Ricardo Gonz&aacute;lez
@@ -49,7 +49,7 @@ $delicious_options['tag_url'] = 'http://del.icio.us/tag/';
 
 // Display del.icio.us recently bookmarked links.
 
-function delicious_bookmarks($username = '', $num = 5, $list = true, $update = true, $tags = false, $filtertag = '', $displaydesc = false, $nodisplaytag = '', $globaltag = false ) {
+function delicious_bookmarks($username = '', $num = 5, $list = true, $update = true, $tags = false, $filtertag = '', $displaydesc = false, $nodisplaytag = '', $globaltag = false, $encode_utf8 = false ) {
 	
 	global $delicious_options;
 	include_once(ABSPATH . WPINC . '/rss.php');
@@ -74,6 +74,7 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 		} else {
 			foreach ( $bookmarks->items as $bookmark ) {
 				$msg = $bookmark['title'];
+				if($encode_utf8) utf8_encode($msg);					
 				$updated = delicious_relative($bookmark['dc']['date']);
 				$link = $bookmark['link'];
 				$desc = $bookmark['description'];
