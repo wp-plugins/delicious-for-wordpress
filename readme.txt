@@ -17,14 +17,14 @@ del.icio.us for WordPress displays your latest del.icio.us bookmarks in your Wor
     * Customizable
     * Widget ready
     * Uses Wordpress resources (no extra files needed)
-    * No options page (yes, it’s a feature)
+    * No options page (yes, it is a feature)
     * Displays bookmarks tags (optional)
     * Filter bookmarks by tag(s) (optional)
     
 **Usage**
 
 If you use WordPress widgets, just drag the widget into your sidebar and configure.
-If widgets aren’t your thing, use the following code to display your latest bookmarks:
+If widgets are not your thing, use the following code to display your latest bookmarks:
 
 `<?php delicious_bookmarks("username"); ?>`
 
