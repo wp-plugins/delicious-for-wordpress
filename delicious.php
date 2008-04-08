@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: del.icio.us for Wordpress
-Version: 1.7
+Version: 1.8
 Plugin URI: http://rick.jinlabs.com/code/delicious
 Description: Displays your recently listened links. Based on <a href="http://cavemonkey50.com/code/pownce/">Pownce for Wordpress</a> by <a href="http://cavemonkey50.com/">Cavemonkey50</a>. 
 Author: Ricardo Gonz&aacute;lez
@@ -75,14 +75,22 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 			foreach ( $bookmarks->items as $bookmark ) {
 				$msg = $bookmark['title'];
 				if($encode_utf8) utf8_encode($msg);					
-				$updated = delicious_relative($bookmark['dc']['date']);
 				$link = $bookmark['link'];
 				$desc = $bookmark['description'];
 			
 				if ($list) echo '<li class="delicious-item">'; elseif ($num != 1) echo '<p class="delicious">';
         		echo '<a href="'.$link.'" class="delicious-link">'.$msg.'</a>'; // Puts a link to the... link.
-      
-				if ($update) echo ' <span class="delicious-timestamp">' . $updated . '</span>';
+
+        if($update) {				
+          $time = strtotime($bookmark['dc']['date']);
+          
+          if ( ( abs( time() - $time) ) < 86400 )
+            $h_time = sprintf( __('%s ago'), human_time_diff( $time ) );
+          else
+            $h_time = date(__('Y/m/d'), $time);
+
+          echo sprintf( '%s',' <span class="delicious-timestamp"><abbr title="' . date(__('Y/m/d H:i:s'), $time) . '">' . $h_time . '</abbr></span>' );
+         }      
 				
 				if ($displaydesc && $desc != '') {
         			echo '<br />';
@@ -114,64 +122,6 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
 }
 	
 	
-// Present the date nicer
-function delicious_relative($time) {
-	$time = explode('T', substr($time, 0, -1));
-	$date = explode('-', $time[0]);
-	$time = explode(':', $time[1]);
-	$time_orig = @gmmktime($time[0]+$offset, $time[1], $time[2], $date[1], $date[2], $date[0]);
-	
-	$diff = $just = time()-$time_orig;
-    $months = floor($diff/2592000);
-    $diff -= $months*2419200;
-    $weeks = floor($diff/604800);
-    $diff -= $weeks*604800;
-    $days = floor($diff/86400);
-    $diff -= $days*86400;
-    $hours = floor($diff/3600);
-    $diff -= $hours*3600;
-    $minutes = floor($diff/60);
-    $diff -= $minutes*60;
-    $seconds = $diff;
-    
-	if ($just<=0) {
-		return 'Just Now!';	
-	} else {
-	    if ($months>0) {
-	        // over a month old, just show date (yyyy/mm/dd format)
-	        return 'on '.date('Y/m/d', $time_orig);
-	    } else {
-	        if ($weeks>0) {
-	            // weeks and days
-	            $relative_date .= ($relative_date?', ':'').$weeks.' '.__('week').($weeks>1?'s':'');
-	            $relative_date .= $days>0?($relative_date?', ':'').$days.' '.__('day').($days>1?'s':''):'';
-	        } elseif ($days>0) {
-	            // days and hours
-	            $relative_date .= ($relative_date?', ':'').$days.' '.__('day').($days>1?'s':'');
-	            $relative_date .= $hours>0?($relative_date?', ':'').$hours.' '.__('hour').($hours>1?'s':''):'';
-	        } elseif ($hours>0) {
-	            // hours and minutes
-	            $relative_date .= ($relative_date?', ':'').$hours.' '.__('hour').($hours>1?'s':'');
-	            $relative_date .= $minutes>0?($relative_date?', ':'').$minutes.' '.__('minute').($minutes>1?'s':''):'';
-	        } elseif ($minutes>0) {
-	            // minutes only
-	            $relative_date .= ($relative_date?', ':'').$minutes.' '.__('minute').($minutes>1?'s':'');
-	        } else {
-	            // seconds only
-	            $relative_date .= ($relative_date?', ':'').$seconds.' '.__('second').($seconds>1?'s':'');
-	        }
-	    }
-	}
-    // show relative date and add proper verbiage
-    return $relative_date.' ago';
-}
-
-
-
-
-	
-
-
 // delicious widget stuff
 function widget_delicious_init() {
 	
