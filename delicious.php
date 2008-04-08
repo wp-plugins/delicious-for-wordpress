@@ -38,6 +38,8 @@ $delicious_options['widget_fields']['filtertag'] = array('label'=>'Filter Tag(s)
 $delicious_options['widget_fields']['displaydesc'] = array('label'=>'Show descriptions:', 'type'=>'checkbox', 'default'=>false);
 $delicious_options['widget_fields']['nodisplaytag'] = array('label'=>'No display tag(s) [cats+dogs+birds]:', 'type'=>'text', 'default'=>'');
 $delicious_options['widget_fields']['globaltag'] = array('label'=>'Global tags:', 'type'=>'checkbox', 'default'=>false);
+$delicious_options['widget_fields']['encode_utf8'] = array('label'=>'UTF8 Encode:', 'type'=>'checkbox', 'default'=>false);
+
 
 $delicious_options['prefix'] = 'delicious';
 
