@@ -160,7 +160,7 @@ function widget_delicious_init() {
 
 		// These lines generate our output.
 		echo $before_widget . $before_title . $item['title'] . $after_title;
-		delicious_bookmarks($item['username'], $item['num'], true, $item['update'], $item['tags'], $item['filtertag'], $item['displaydesc'], $item['nodisplaytag'], $item['globaltag']);
+		delicious_bookmarks($item['username'], $item['num'], true, $item['update'], $item['tags'], $item['filtertag'], $item['displaydesc'], $item['nodisplaytag'], $item['globaltag'], $item['encode_utf8']);
 		echo $after_widget;
 	}
 
