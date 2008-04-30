@@ -248,7 +248,7 @@ function widget_delicious_init() {
 	function widget_delicious_register() {
 		
 		$options = get_option('widget_delicious');
-		$dims = array('width' => 300, 'height' => 300);
+		$dims = array('width' => 300, 'height' => 400);
 		$class = array('classname' => 'widget_delicious');
 
 		for ($i = 1; $i <= 9; $i++) {
