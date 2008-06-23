@@ -28,6 +28,7 @@ Author URI: http://rick.jinlabs.com/
 
 
 define('MAGPIE_CACHE_AGE', 120);
+define('MAGPIE_INPUT_ENCODING', 'UTF-8');
 
 $delicious_options['widget_fields']['title'] = array('label'=>'Title:', 'type'=>'text', 'default'=>'');
 $delicious_options['widget_fields']['username'] = array('label'=>'Username:', 'type'=>'text', 'default'=>'');
