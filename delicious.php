@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: del.icio.us for Wordpress
-Version: 1.8
+Version: 2.0
 Plugin URI: http://rick.jinlabs.com/code/delicious
 Description: Displays your recently listened links. Based on <a href="http://cavemonkey50.com/code/pownce/">Pownce for Wordpress</a> by <a href="http://cavemonkey50.com/">Cavemonkey50</a>. 
 Author: Ricardo Gonz&aacute;lez
@@ -41,14 +41,9 @@ $delicious_options['widget_fields']['nodisplaytag'] = array('label'=>'No display
 $delicious_options['widget_fields']['globaltag'] = array('label'=>'Global tags:', 'type'=>'checkbox', 'default'=>false);
 $delicious_options['widget_fields']['encode_utf8'] = array('label'=>'UTF8 Encode:', 'type'=>'checkbox', 'default'=>false);
 
-
 $delicious_options['prefix'] = 'delicious';
-
-$delicious_options['rss_url'] = 'http://del.icio.us/rss/';
-
-$delicious_options['tag_url'] = 'http://del.icio.us/tag/';
-
-
+$delicious_options['rss_url'] = 'http://feeds.delicious.com/v2/rss/';
+$delicious_options['tag_url'] = 'http://delicious.com/tag/';
 
 // Display del.icio.us recently bookmarked links.
 
@@ -85,7 +80,7 @@ function delicious_bookmarks($username = '', $num = 5, $list = true, $update = t
         		echo '<a href="'.$link.'" class="delicious-link">'.$msg.'</a>'; // Puts a link to the... link.
 
         if($update) {				
-          $time = strtotime($bookmark['dc']['date']);
+          $time = strtotime($bookmark['pubdate']);
           
           if ( ( abs( time() - $time) ) < 86400 )
             $h_time = sprintf( __('%s ago'), human_time_diff( $time ) );
